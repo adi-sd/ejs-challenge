@@ -7,6 +7,8 @@ const ejs = require("ejs");
 const port = 3000;
 const app = express();
 
+let posts = [];
+
 //-----------------------------------------------------------------------
 
 app.set("view engine", "ejs");
@@ -24,7 +26,8 @@ const contactContent = "Massa massa ultricies mi quis hendrerit dolor magna. Dia
 
 app.get("/", (req, res) => {
     res.render("home", {
-        homeStartingContent: homeStartingContent
+        homeStartingContent: homeStartingContent,
+        posts: posts
     });
 });
 
@@ -43,6 +46,29 @@ app.get("/contact", (req, res) => {
 app.get("/compose", (req, res) => {
     res.render("compose", {});
 });
+
+app.post("/compose", (req, res) => {
+    const post = {
+        title: req.body.postTitle,
+        body: req.body.postContent
+    };
+    posts.push(post);
+
+    res.redirect("/");
+});
+
+app.get("/posts/:postName", (req, res) => {
+
+    const recivedName = req.params.postName;
+    posts.forEach((post) => {
+        const storedName = post.title;
+
+        if (storedName === recivedName) {
+            console.log("Match Found!");
+        }
+    });
+});
+
 //-----------------------------------------------------------------------
 
 app.listen(port, () => {
