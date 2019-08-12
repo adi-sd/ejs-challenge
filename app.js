@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const _ = require("lodash");
 
 //-----------------------------------------------------------------------
 
@@ -59,12 +60,15 @@ app.post("/compose", (req, res) => {
 
 app.get("/posts/:postName", (req, res) => {
 
-    const recivedName = req.params.postName;
+    const recivedName = _.lowerCase(req.params.postName);
     posts.forEach((post) => {
-        const storedName = post.title;
+        const storedName = _.lowerCase(post.title);
 
         if (storedName === recivedName) {
             console.log("Match Found!");
+            res.render("post",{
+                post : post
+            });
         }
     });
 });
